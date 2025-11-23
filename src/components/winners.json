@@ -1,0 +1,16 @@
+[
+  {
+    "schemeId": "101",
+    "schemeName": "Diwali Special 2025",
+    "winner": {
+      "name": "Ramesh Kumar",
+      "ticketNumber": "5823",
+      "prize": "Tata Punch"
+    }
+  },
+  {
+    "schemeId": "102",
+    "schemeName": "New Year Bonanza 2026",
+    "winner": null
+  }
+]
