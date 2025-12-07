@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
 const SuccessPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { downloadLink, userData, ticket } = location.state || {};
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
   const [showTicket, setShowTicket] = useState(false);
@@ -16,6 +17,24 @@ const SuccessPage = () => {
       return () => clearTimeout(timer);
     }
   }, [downloadLink, userData]);
+
+  // ✅ बेहतर डाउनलोड हैंडलर जो नेविगेट करता है
+  const handleDownload = (e) => {
+    e.preventDefault();
+
+    // 1. Trigger file download
+    const link = document.createElement("a");
+    link.href = `${backendUrl}${downloadLink}`;
+    link.download = `ticket_${ticket.ticketNumber}.png`;
+    document.body.appendChild(link); // Firefox के लिए आवश्यक
+    link.click();
+    document.body.removeChild(link); // DOM को साफ़ करें
+
+    // 2. डाउनलोड के बाद उपयोगकर्ता को डैशबोर्ड पर भेजें
+    setTimeout(() => {
+      navigate('/dashboard'); // या '/' होम पेज के लिए
+    }, 1000); // 1 सेकंड की देरी
+  };
 
   if (!downloadLink || !userData || !ticket) {
     return (
@@ -58,7 +77,7 @@ const SuccessPage = () => {
 
             <a
               href={`${backendUrl}${downloadLink}`}
-              download={`ticket_${ticket.ticketNumber}.png`}
+              onClick={handleDownload}
               className="w-full inline-block px-4 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
             >
               Download Your Ticket

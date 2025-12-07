@@ -25,7 +25,15 @@ const AdminLogin = () => {
       // Check if network response is okay
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setError(data.message || `Login failed with status: ${res.status}`);
+        let errorMessage = data.message || data.hint || `Login failed with status: ${res.status}`;
+        
+        // Add helpful hint for 401 errors
+        if (res.status === 401 && data.hint && data.hint.includes("No admin account")) {
+          errorMessage += "\n\n💡 Tip: Create an admin account using:\nPOST http://localhost:5000/api/admin/signup\nOr run: node routes/adminPassword.js";
+        }
+        
+        setError(errorMessage);
+        console.error("Login error:", { status: res.status, data });
         return;
       }
 
@@ -50,7 +58,10 @@ const AdminLogin = () => {
   return (
     <AuthLayout title="Admin Login">
       {error && (
-        <p className="text-red-500 mb-4 text-center animate-shake">{error}</p>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+          <p className="text-red-700 text-sm font-semibold mb-2">⚠️ Login Failed</p>
+          <p className="text-red-600 text-sm whitespace-pre-line">{error}</p>
+        </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
