@@ -55,7 +55,7 @@ const SuccessPage = () => {
           <div key="payment-details">
             <h1 className="text-3xl font-bold text-green-600 mb-2">Payment Successful!</h1>
             <p className="text-gray-700 mb-1">Thank you, {userData.fullName}.</p>
-            <p className="text-gray-500 mb-4">Your ticket is being generated. Please wait...</p>
+            <p className="text-gray-500 mb-4">Your number is being generated. Please wait...</p>
 
             <div className="text-left bg-gray-50 p-4 my-4 rounded-lg border text-sm space-y-2">
               <p className="text-gray-800"><strong>Ticket Number:</strong> <span className="font-mono text-blue-600">{ticket.ticketNumber}</span></p>
@@ -66,7 +66,7 @@ const SuccessPage = () => {
           </div>
         ) : (
           <div key="ticket-display">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Ticket is Ready!</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Number is Ready!</h2>
             <div className="my-6 border-2 border-dashed border-gray-300 p-2 rounded-lg bg-gray-50">
               <img
                 src={`${backendUrl}${downloadLink}`}
@@ -80,7 +80,7 @@ const SuccessPage = () => {
               onClick={handleDownload}
               className="w-full inline-block px-4 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
             >
-              Download Your Ticket
+              Download Your Number
             </a>
           </div>
         )}

@@ -170,7 +170,7 @@ const LotteryPage = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-700">
-          🎯 Christmas Special Lottery 🎁 Skim no - {skimId}
+          🎯 Christmas Special Numbers 🎁 Skim no - {skimId}
         </h1>
 
         <button
@@ -184,9 +184,12 @@ const LotteryPage = () => {
       {/* Tabs */}
       <div className="flex gap-3 mb-4 overflow-x-auto pb-2">
         {[
-          { id: "lottery", label: "🎟 Lottery Numbers" },
+          {
+            id: "lottery",
+            label: `🎟 Special Numbers (${TOTAL_NUMBERS - purchasedNumbers.size})`,
+          },
           { id: "steps", label: "📖 How to Purchase" },
-          { id: "sold", label: "Sold Tickets" },
+          { id: "sold", label: `Sold Tickets (${purchasedNumbers.size})` },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -216,29 +219,19 @@ const LotteryPage = () => {
               className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12 gap-2 overflow-auto max-h-[calc(70vh-1rem)]"
             >
               {allNumbers.slice(0, visibleCount).map((num) => {
+                if (purchasedNumbers.has(num)) {
+                  return null; // खरीदे गए नंबर को ग्रिड में न दिखाएं
+                }
                 const displayNum = formatTicketNumber(skimId, num);
-                const isPurchased = purchasedNumbers.has(num);
 
                 return (
                   <div
                     key={displayNum}
-                    onClick={() => !isPurchased && handleNumberClick(num)}
-                    className={`
-                      relative flex items-center justify-center
-                      aspect-square rounded-lg shadow font-semibold
-                      text-[0.55rem] sm:text-xs md:text-sm text-center
-                      transition-all
-                      ${isPurchased ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-gradient-to-br from-green-400 to-blue-600 text-white hover:scale-105 cursor-pointer"}
-                    `}
+                    onClick={() => handleNumberClick(num)}
+                    className="relative flex items-center justify-center aspect-square rounded-lg shadow font-semibold text-[0.55rem] sm:text-xs md:text-sm text-center transition-all bg-gradient-to-br from-green-400 to-blue-600 text-white hover:scale-105 cursor-pointer"
                     style={{ minWidth: "45px" }}
                   >
                     {displayNum}
-
-                    {isPurchased && (
-                      <div className="absolute bottom-0 text-white bg-red-600 px-1 py-0.5 text-[7px] sm:text-[8px] font-bold rounded">
-                        SOLD
-                      </div>
-                    )}
                   </div>
                 );
               })}

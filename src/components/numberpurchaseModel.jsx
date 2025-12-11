@@ -69,7 +69,7 @@ const NumberPurchaseModal = ({ number, amount, skimId, onClose, onPurchase }) =>
     }
 
     if (!razorpayKeyId) {
-      setErrors({ general: "Razorpay Key ID is not configured. Please contact support." });
+      setErrors({ general: "Frontend Razorpay Key ID is missing. Please check the application configuration." });
       setLoading(false);
       return;
     }
@@ -88,9 +88,15 @@ const NumberPurchaseModal = ({ number, amount, skimId, onClose, onPurchase }) =>
       });
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        const errorMessage = errorData.message || errorData.hint || `Failed to create order. Status: ${res.status}`;
-        throw new Error(errorMessage);
+        // Enhanced error handling to get more details from the backend
+        let errorMessage = `Failed to create order. Status: ${res.status}`;
+        try {
+          const errorData = await res.json();
+          errorMessage = errorData.message || errorData.error || JSON.stringify(errorData);
+        } catch (e) {
+          errorMessage = await res.text(); // Fallback to plain text if JSON parsing fails
+        }
+        throw new Error(errorMessage); // This will now show a more specific error
       }
 
       const responseData = await res.json();
@@ -202,7 +208,7 @@ const NumberPurchaseModal = ({ number, amount, skimId, onClose, onPurchase }) =>
         <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
           <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-lg font-bold">×</button>
           <div ref={ticketRef} className="bg-gradient-to-br from-blue-100 to-green-100 p-6 rounded-lg text-center">
-            <h2 className="text-2xl font-bold text-green-700 mb-2">Purchase Successful!</h2>
+            <h2 className="text-2xl font-bold text-green-700 mb-2">Ticket Purchase Successful!</h2>
             <p className="text-gray-600 mb-4">Please take a screenshot and download your ticket.</p>
             <div className="border-2 border-dashed border-gray-400 p-4 rounded-lg">
               <p className="text-sm text-gray-500">Ticket Number</p>
@@ -232,18 +238,27 @@ const NumberPurchaseModal = ({ number, amount, skimId, onClose, onPurchase }) =>
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
         <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-lg font-bold">×</button>
-        <h2 className="text-2xl font-bold text-center mb-4">Purchase Ticket #{number}</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Purchase Number #{number}</h2>
         <p className="text-center text-lg font-semibold text-indigo-600 mb-6">Amount to Pay: ₹{amount}</p>
         {errors.general && <p className="text-red-500 text-sm text-center mb-4">{errors.general}</p>}
 
         <form className="w-full flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
           {["fullName", "mobile", "state", "age", "aadhaar", "email"].map((field) => (
             <div key={field}>
+              
+              
               <input
                 type={field === "age" || field === "mobile" ? "tel" : field === "email" ? "email" : "text"}
                 name={field}
-                placeholder={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
-                maxLength={field === "mobile" ? 10 : field === "aadhaar" ? 12 : undefined}
+                placeholder={
+                  {
+                    fullName: "Full Name",
+                    mobile: "10-Digit Mobile Number",
+                    state: "State",
+                    age: "Age (18+)",
+                    aadhaar: "12-Digit Aadhaar Number (Optional)",
+                    email: "Email Address (Optional)"
+                  }[field]}                maxLength={field === "mobile" ? 10 : field === "aadhaar" ? 12 : undefined}
                 value={formData[field]}
                 onChange={handleChange}
                 className={`border p-3 rounded w-full transition-all ${errors[field] ? "border-red-500 ring-1 ring-red-500" : "border-gray-300 focus:ring-1 focus:ring-indigo-500"}`}

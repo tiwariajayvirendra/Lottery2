@@ -16,7 +16,7 @@ export const skims = [
       { name: "Diya Patel", ticket: "GOLD02", position: "2nd Position" },
     ],
     disclaimer:
-      "Lottery is subject to terms & conditions. Results will be declared once all tickets are sold.",
+      "Number is subject to terms & conditions. Results will be declared once all numbers are sold.",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ export const skims = [
       { name: "Vivaan Singh", ticket: "SILV01", position: "1st Position" },
       { name: "Ishaan Gupta", ticket: "SILV02", position: "2nd Position" },
     ],
-    disclaimer: "Please ensure valid KYC details. Tickets are non-refundable.",
+    disclaimer: "Please ensure valid KYC details. Numbers are non-refundable.",
   },
   {
     id: 3,
@@ -62,7 +62,7 @@ export const skims = [
       { name: "Sai Desai", ticket: "PLAT02", position: "2nd Position" },
     ],
     disclaimer:
-      "Ensure you save your ticket screenshot. Technical issues may delay downloads.",
+      "Ensure you save your number screenshot. Technical issues may delay downloads.",
   },
 ];
 
@@ -74,7 +74,7 @@ const AdsRow = () => (
     {/* AD 1 */}
     <div className="p-5 rounded-xl bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-md border border-white/30 shadow-md">
       <h3 className="text-lg font-bold text-indigo-800">⭐ Premium Membership</h3>
-      <p className="text-sm text-gray-700">Unlock exclusive lottery deals.</p>
+      <p className="text-sm text-gray-700">Unlock exclusive Numbers deals.</p>
     </div>
 
     {/* AD 2 */}
@@ -135,7 +135,7 @@ const SkimCard = ({ skim }) => {
         {activeTab === "details" && (
           <div>
             <p className="text-lg font-semibold text-indigo-700 mb-2">
-              🎟 Ticket Price: ₹{skim.ticketPrice}
+              🎟 Number Price: ₹{skim.ticketPrice}
             </p>
             <div className="space-y-2 mb-4">
               {skim.winnings.map((win, idx) => (
@@ -167,7 +167,7 @@ const SkimCard = ({ skim }) => {
         onClick={() => navigate(`/lottery/${skim.id}`)} // 2. navigate फ़ंक्शन का उपयोग करें
         className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition"
       >
-        Purchase Tickets for {skim.name}
+        Purchase Number for {skim.name}
       </button>
     </div>
   );
@@ -177,7 +177,7 @@ const DashboardLayout = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#e0f7fa] to-[#f5f5f5] p-6">
       <h1 className="text-3xl font-bold text-center text-indigo-800 mb-10">
-        🎁 Special Lottery Skims Dashboard
+        🎁 Special Number Skims Dashboard
       </h1>
 
       {/* Loop skims AND add ads after every row */}
